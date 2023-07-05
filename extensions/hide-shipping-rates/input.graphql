@@ -2,11 +2,10 @@ query Input {
   cart {
     deliveryGroups {
       deliveryAddress {
-        provinceCode
+        zip
       }
       deliveryOptions {
         handle
-        title
       }
     }
   }
