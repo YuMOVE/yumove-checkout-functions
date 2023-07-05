@@ -14,26 +14,23 @@ export default
 * @returns {FunctionResult}
 */
   (input) => {
-    // The message to be added to the delivery option
-    const message = "May be delayed due to weather conditions";
 
-    let toRename = input.cart.deliveryGroups
+    let toHide = input.cart.deliveryGroups
       // Filter for delivery groups with a shipping address containing the affected state or province
-      .filter(group => group.deliveryAddress?.provinceCode &&
-        group.deliveryAddress.provinceCode == "GB")
+      .filter(group => group.deliveryAddress?.zip &&
+        ( (group.deliveryAddress.zip).slice(0, 2) == "GY" || (group.deliveryAddress.zip).slice(0, 2) == "JE"  ) )
       // Collect the delivery options from these groups
       .flatMap(group => group.deliveryOptions)
       // Construct a rename operation for each, adding the message to the option title
       .map(option => /** @type {Operation} */({
-        rename: {
-          deliveryOptionHandle: option.handle,
-          title: option.title ? `${option.title} - ${message}` : message
+        hide: {
+          deliveryOptionHandle: option.handle
         }
       }));
 
     // The @shopify/shopify_function package applies JSON.stringify() to your function result
     // and writes it to STDOUT
     return {
-      operations: toRename
+      operations: toHide
     };
   };
